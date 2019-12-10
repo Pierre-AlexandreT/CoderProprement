@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import fr.appsolute.tp.R
 import fr.appsolute.tp.data.model.Character
 import fr.appsolute.tp.ui.adapter.CharacterAdapter
@@ -51,5 +54,7 @@ class CharacterListFragment : Fragment(), OnCharacterClickListener {
     // Implementation of OnCharacterClickListener
     override fun invoke(view: View, character: Character) {
         Toast.makeText(view.context, character.name, Toast.LENGTH_SHORT).show()
+        val action = bundleOf(FragmentCharacterDetail.ARG_CHARACTER_ID_KEY to character.id)
+        findNavController().navigate(R.id.action_character_list_fragment_to_fragment_character_detail, action)
     }
 }

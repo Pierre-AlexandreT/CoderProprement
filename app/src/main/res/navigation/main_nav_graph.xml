@@ -9,5 +9,18 @@
         android:id="@+id/character_list_fragment"
         android:name="fr.appsolute.tp.ui.fragment.CharacterListFragment"
         android:label="fragment_character_list"
-        tools:layout="@layout/fragment_character_list" />
+        tools:layout="@layout/fragment_character_list" >
+        <action
+            android:id="@+id/action_character_list_fragment_to_fragment_character_detail"
+            app:destination="@id/fragment_character_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_character_detail"
+        android:name="fr.appsolute.tp.ui.fragment.FragmentCharacterDetail"
+        android:label="fragment_fragment_character_detail"
+        tools:layout="@layout/fragment_fragment_character_detail" >
+        <argument
+            android:name="characterId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
