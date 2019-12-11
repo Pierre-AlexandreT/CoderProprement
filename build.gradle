@@ -47,6 +47,7 @@ ext {
     lifecycle_version = '2.2.0-rc02'
     navigation_version = '2.2.0-rc02'
     paging_version = '2.1.0'
+    room_version = '2.2.2'
     // endregion
 
     // region Networking

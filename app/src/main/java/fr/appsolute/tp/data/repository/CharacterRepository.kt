@@ -28,7 +28,7 @@ private class CharacterRepositoryImpl(
         .build()
 
     override fun getPaginatedList(scope: CoroutineScope): LiveData<PagedList<Character>> {
-        return LivePagedListBuilder(
+         return LivePagedListBuilder(
             CharacterDataSource.Factory(api, scope),
             paginationConfig
         ).build()
