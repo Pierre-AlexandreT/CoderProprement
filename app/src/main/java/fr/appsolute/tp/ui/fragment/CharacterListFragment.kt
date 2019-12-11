@@ -10,18 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import fr.appsolute.tp.R
 import fr.appsolute.tp.data.model.Character
 import fr.appsolute.tp.ui.adapter.CharacterAdapter
 import fr.appsolute.tp.ui.viewmodel.CharacterViewModel
+import fr.appsolute.tp.ui.viewmodel.EpisodeViewModel
 import fr.appsolute.tp.ui.widget.holder.OnCharacterClickListener
 import kotlinx.android.synthetic.main.fragment_character_list.view.*
 
 class CharacterListFragment : Fragment(), OnCharacterClickListener {
 
     private lateinit var characterViewModel: CharacterViewModel
+    private lateinit var episodeViewModel: EpisodeViewModel
     private lateinit var characterAdapter: CharacterAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,10 @@ class CharacterListFragment : Fragment(), OnCharacterClickListener {
         activity?.run {
             characterViewModel = ViewModelProvider(this, CharacterViewModel).get()
         } ?: throw IllegalStateException("Invalid Activity")
+
+        activity?.run {
+            episodeViewModel = ViewModelProvider(this, EpisodeViewModel).get()
+        }
     }
 
     override fun onCreateView(
@@ -49,12 +54,17 @@ class CharacterListFragment : Fragment(), OnCharacterClickListener {
         characterViewModel.charactersPagedList.observe(this) {
             characterAdapter.submitList(it)
         }
+
+        episodeViewModel.getEpisodeList()
     }
 
     // Implementation of OnCharacterClickListener
     override fun invoke(view: View, character: Character) {
         Toast.makeText(view.context, character.name, Toast.LENGTH_SHORT).show()
         val action = bundleOf(FragmentCharacterDetail.ARG_CHARACTER_ID_KEY to character.id)
-        findNavController().navigate(R.id.action_character_list_fragment_to_fragment_character_detail, action)
+        findNavController().navigate(
+            R.id.action_character_list_fragment_to_fragment_character_detail,
+            action
+        )
     }
 }

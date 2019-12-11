@@ -14,22 +14,32 @@ abstract class RickAndMortyDatabase : RoomDatabase() {
     abstract val episodeDao: EpisodeDao
 }
 
-private class DatabaseManagerImpl(applicationContext: RickAndMortyApplication) : DatabaseManager {
-    override val database: RickAndMortyDatabase =
-        Room.databaseBuilder(
-            applicationContext,
-            RickAndMortyDatabase::class.java,
-            "RickAndMorty.db"
-        ).build()
-}
+private class DatabaseManagerImpl(
+    override val database: RickAndMortyDatabase
+) : DatabaseManager
 
 interface DatabaseManager {
 
     val database: RickAndMortyDatabase
 
     companion object {
-        fun newInstance(applicationContext: RickAndMortyApplication): DatabaseManager =
-            DatabaseManagerImpl(applicationContext)
+        private const val DATABASE_NAME = "rick_and_morty.db"
+        @Volatile
+        private var databaseManager: DatabaseManager? = null
+
+        fun getInstance(app: RickAndMortyApplication? = null): DatabaseManager {
+            return databaseManager ?: synchronized(this) {
+                DatabaseManagerImpl(
+                    Room.databaseBuilder(
+                        app ?: throw IllegalStateException("No Application"),
+                        RickAndMortyDatabase::class.java,
+                        DATABASE_NAME
+                    ).build()
+                ).also {
+                    databaseManager = it
+                }
+            }
+        }
     }
 }
 
@@ -40,6 +50,6 @@ interface EpisodeDao {
     fun selectAll(): List<Episode>
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(entities: List<Episode>)
 }
